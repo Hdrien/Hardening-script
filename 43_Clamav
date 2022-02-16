@@ -1,0 +1,14 @@
+function f_clamav {
+  echo "[$SCRIPT_COUNT] Configuring Clamav"
+
+    echo "/usr/bin/freshcalm >> /var/log/resul_freshcalm.txt" >> /etc/cron.daily/clamav
+    echo "/etc/init.d/clamav-freshcalm stop" >> /etc/cron.daily/clamav
+    echo "/usr/bin/freshcalm-v >> /var/log/resul_freshcalm.txt" >> /etc/cron.daily/clamav
+    echo "/etc/init.d/clamav-freshcalm start" >> /etc/cron.daily/clamav
+   
+    chmod 755 /etc/cron.daily/clamav
+    chmod 755 /etc/cron.daily/clamav
+  
+
+  ((SCRIPT_COUNT++))
+}

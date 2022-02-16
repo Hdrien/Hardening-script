@@ -1,0 +1,58 @@
+function f_package_install {
+  echo "[$SCRIPT_COUNT] Installing base packages"
+
+  local VM
+
+  if dmesg | grep -i -E "dmi.*vmware"; then
+    VM="open-vm-tools"
+  fi
+
+  if dmesg | grep -i -E "dmi.*virtualbox"; then
+    VM="virtualbox-guest-dkms virtualbox-guest-utils"
+  fi
+
+  
+  local PACKAGE_INSTALL
+  PACKAGE_INSTALL="acct aide-common apparmor-profiles apparmor-utils auditd debsums haveged libpam-apparmor libpam-cracklib libpam-tmpdir rkhunter systemd-coredump vlock rfkill  $VM"
+  apt-get install clamav clamav-daemon -y
+  apt-get install iptables-persistent -y
+  apt-get install libreoffice -y
+  
+
+  for deb_install in $PACKAGE_INSTALL; do
+    $APT install --no-install-recommends "$deb_install"
+  done
+
+  echo "Are you executing this script on ADMIN Desktop ?[Y,N]"
+  read input
+  if [[ $input == "Y" ]]; then
+    apt-get install -y gparted
+    apt-get install -y gnome-disk-utility
+    apt-get install -y net-tools
+    add-apt-repository ppa:phoerious/keepassxc
+    apt update
+    apt install -y keepassxc
+    sed -i '/module(load="imudp")/s/^#//g' /etc/rsyslog.conf
+    sed -i '/input(type="imudp" port="514")/s/^#//g' /etc/rsyslog.conf
+    systemctl restart rsyslog
+  fi
+  apt update
+  iptables-save > /etc/iptables/rules.v4
+
+  ((SCRIPT_COUNT++))
+}
+
+function f_package_remove {
+  echo "[$SCRIPT_COUNT] Package removal"
+
+  local PACKAGE_REMOVE
+  PACKAGE_REMOVE="apport* avahi* beep git popularity-contest rsh* talk* telnet* tftp* whoopsie xinetd yp-tools ypbind"
+
+  for deb_remove in $PACKAGE_REMOVE; do
+    $APT purge "$deb_remove"
+  done
+
+  $APT purge "$(dpkg -l | grep '^rc' | awk '{print $2}')"
+
+  ((SCRIPT_COUNT++))
+}

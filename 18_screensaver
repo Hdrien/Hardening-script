@@ -1,0 +1,24 @@
+function f_screensaver {
+  echo "[$SCRIPT_COUNT] Configure timeout of Blank screen and lock screen"
+  
+# Lockdown Gnome screensaver lock settings
+echo -e "${HIGHLIGHT}Configuring Gnome screensaver lock settings...${NC}"
+mkdir -p /etc/dconf/db/local.d/locks
+echo "[org/gnome/desktop/session]
+idle-delay=600
+
+[org/gnome/desktop/screensaver]
+lock-enabled=1
+lock-delay=0" > /etc/dconf/db/local.d/00_screensaver-lock
+
+echo "/org/gnome/desktop/session/idle-delay
+/org/gnome/desktop/screensaver/lock-enabled
+/org/gnome/desktop/screensaver/lock-delay" > /etc/dconf/db/local.d/locks/00_screensaver-lock
+
+dconf update
+ 
+
+  ((SCRIPT_COUNT++))
+}
+
+

@@ -1,0 +1,14 @@
+function f_gdmbanner {
+  echo "[$SCRIPT_COUNT] Configure gdmbanner"
+  
+  gdm1="[org/gnome/login-screen]"
+  gdm2="banner-message-enable=true"
+  gdm3="banner-message-text='All Company workstations must deploy Data Loss Protection(DLP) tool to scan for and encrypt sensitive company or client data that is stored on their hard disk or portable drives which could be at rest or transmitted from the workstation (upload, transmitted via email, copied to USB device, etc.).'"
+
+  echo $gdm1 > $GDM
+  echo $gdm2 >> $GDM
+  echo $gdm3 >> $GDM
+ 
+  dconf update
+  ((SCRIPT_COUNT++))
+}

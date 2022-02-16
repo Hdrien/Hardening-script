@@ -1,0 +1,6 @@
+function f_checkreboot {
+read -p " Reboot now? [y/n]: " CONFIRM
+  if [ "$CONFIRM" == "y" ]; then
+      reboot
+  fi
+}
